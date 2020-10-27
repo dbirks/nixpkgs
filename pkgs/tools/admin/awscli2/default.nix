@@ -66,7 +66,10 @@ with py.pkgs; buildPythonApplication rec {
     wcwidth
   ];
 
-  postInstall = ''
+  postBuild = ''
+    python ./scripts/gen-ac-index --index-location=./ac.index
+    install -Dm 644 ac.index $out/lib/python${pythonEnv.pythonVersion}/site-packages/awscli/data/ac.index
+
     mkdir -p $out/etc/bash_completion.d
     echo "complete -C $out/bin/aws_completer aws" > $out/etc/bash_completion.d/awscli
     mkdir -p $out/share/zsh/site-functions
